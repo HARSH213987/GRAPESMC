@@ -1,397 +1,191 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aetherum — Minecraft Server</title>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GhostMC – Minecraft Server</title>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#0b0d12; --bg-soft:#12151c; --card:#161a22; --card-hover:#1b2029; --card-border:#242a35;
-    --text:#e8eaed; --text-dim:#9aa1ad; --accent:#6d8dff; --accent-2:#8f6dff;
-    --accent-soft:rgba(109,141,255,0.12); --danger:#ff6b6b; --danger-soft:rgba(255,107,107,0.1);
-    --ok:#4ade80; --gold:#fbbf24; --radius:14px;
-  }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  html{scroll-behavior:smooth;}
-  body{ background:var(--bg); color:var(--text); font-family:'Manrope', sans-serif; line-height:1.6; -webkit-font-smoothing:antialiased; }
-  h1,h2,h3{ font-family:'Fraunces', serif; letter-spacing:-0.02em; }
-  a{ color:inherit; text-decoration:none; }
-  ::selection{ background:var(--accent); color:#fff; }
-  .wrap{ max-width:1120px; margin:0 auto; padding:0 24px; }
-
-  /* EDIT-ME MARKER STYLE */
-  .edit-me{ outline:2px dashed rgba(251,191,36,0.5); outline-offset:4px; border-radius:6px; position:relative; }
-  .edit-me::before{
-    content:'EDIT ME'; position:absolute; top:-11px; left:8px;
-    background:var(--gold); color:#1a1300; font-size:9px; font-weight:800; letter-spacing:0.05em;
-    padding:2px 7px; border-radius:100px; z-index:5;
-  }
-
-  nav{ position:sticky; top:0; z-index:100; backdrop-filter:blur(12px); background:rgba(11,13,18,0.75); border-bottom:1px solid var(--card-border); }
-  nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:66px; }
-  .brand{ display:flex; align-items:center; gap:10px; font-family:'Fraunces', serif; font-size:19px; font-weight:700; }
-  .brand .dot{ width:10px; height:10px; border-radius:3px; background:linear-gradient(135deg, var(--accent), var(--accent-2)); }
-  nav ul{ list-style:none; display:flex; gap:30px; font-size:14px; color:var(--text-dim); }
-  nav ul a:hover{ color:var(--text); }
-  .nav-cta{ display:flex; align-items:center; gap:10px; font-size:13px; font-weight:700; background:var(--accent); color:#fff; padding:9px 16px; border-radius:9px; transition:opacity 0.15s; }
-  .nav-cta:hover{ opacity:0.88; }
-  @media (max-width:860px){ nav ul{ display:none; } }
-
-  .hero{ padding:100px 0 80px; position:relative; overflow:hidden; text-align:center; }
-  .hero::before{ content:''; position:absolute; top:-250px; left:50%; transform:translateX(-50%); width:900px; height:700px; background:radial-gradient(circle, rgba(109,141,255,0.16), transparent 65%); pointer-events:none; }
-  .eyebrow{ display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:600; color:var(--ok); background:rgba(74,222,128,0.1); padding:7px 14px; border-radius:100px; margin-bottom:26px; position:relative; z-index:1; }
-  .eyebrow .pulse{ width:7px; height:7px; border-radius:50%; background:var(--ok); box-shadow:0 0 8px var(--ok); animation:pulse 1.6s infinite; }
-  .eyebrow.offline{ color:var(--danger); background:var(--danger-soft); }
-  .eyebrow.offline .pulse{ background:var(--danger); box-shadow:0 0 8px var(--danger); animation:none; }
-  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:0.3;} }
-  h1.title{ font-size:clamp(38px, 6.5vw, 66px); font-weight:700; line-height:1.06; max-width:820px; margin:0 auto 20px; position:relative; z-index:1; }
-  h1.title span{ background:linear-gradient(90deg, var(--accent), var(--accent-2)); -webkit-background-clip:text; background-clip:text; color:transparent; }
-  .hero p.lead{ font-size:18px; color:var(--text-dim); max-width:540px; margin:0 auto 40px; position:relative; z-index:1; }
-  .ip-box{ display:inline-flex; align-items:center; gap:0; background:var(--card); border:1px solid var(--card-border); border-radius:12px; overflow:hidden; margin-bottom:20px; position:relative; z-index:1; }
-  .ip-box .ip{ padding:16px 22px; font-family:'Fraunces', serif; font-size:18px; font-weight:600; letter-spacing:0.02em; }
-  .ip-box button{ border:none; cursor:pointer; height:100%; background:var(--accent); color:#fff; font-family:'Manrope', sans-serif; font-weight:700; font-size:14px; padding:16px 22px; transition:opacity 0.15s; }
-  .ip-box button:hover{ opacity:0.88; }
-  .cta-row{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-bottom:56px; position:relative; z-index:1; }
-  .btn-secondary{ display:inline-flex; align-items:center; gap:8px; font-size:14px; font-weight:600; color:var(--text); background:var(--card); border:1px solid var(--card-border); padding:12px 20px; border-radius:10px; transition:background 0.15s; }
-  .btn-secondary:hover{ background:var(--card-hover); }
-  .hero-stats{ display:flex; justify-content:center; gap:56px; flex-wrap:wrap; padding-top:36px; border-top:1px solid var(--card-border); position:relative; z-index:1; }
-  .stat b{ display:block; font-family:'Fraunces', serif; font-size:30px; font-weight:700; }
-  .stat span{ font-size:13px; color:var(--text-dim); }
-
-  section{ padding:80px 0; border-top:1px solid var(--card-border); }
-  .section-label{ font-size:13px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--accent); margin-bottom:12px; }
-  .section-title{ font-size:clamp(26px, 3.5vw, 36px); font-weight:700; max-width:600px; margin-bottom:16px; }
-  .section-sub{ color:var(--text-dim); max-width:560px; font-size:16px; margin-bottom:48px; }
-
-  .feature-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; }
-  .feature{ background:var(--card); border:1px solid var(--card-border); border-radius:var(--radius); padding:28px; transition:transform 0.15s, border-color 0.15s; }
-  .feature:hover{ transform:translateY(-4px); border-color:var(--accent); }
-  .feature .icon{ width:42px; height:42px; border-radius:10px; display:flex; align-items:center; justify-content:center; background:var(--accent-soft); color:var(--accent); font-size:19px; margin-bottom:18px; }
-  .feature h3{ font-size:17px; font-weight:600; margin-bottom:8px; }
-  .feature p{ font-size:14px; color:var(--text-dim); }
-  @media (max-width:860px){ .feature-grid{ grid-template-columns:1fr 1fr; } }
-  @media (max-width:560px){ .feature-grid{ grid-template-columns:1fr; } }
-
-  .gallery-grid{ display:grid; grid-template-columns:1.4fr 1fr 1fr; grid-template-rows:200px 200px; gap:14px; }
-  .g1{ grid-row:span 2; }
-  .gallery-grid > div{ border-radius:var(--radius); overflow:hidden; position:relative; display:flex; align-items:flex-end; padding:18px; font-size:13px; font-weight:600; color:#fff; background-size:cover; background-position:center; }
-  .gallery-grid > div::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.65)); }
-  .gallery-grid > div span{ position:relative; z-index:1; }
-  .gg1{ background:linear-gradient(135deg, #2a3a6e, #1a2340); }
-  .gg2{ background:linear-gradient(135deg, #3a2a5e, #241a3d); }
-  .gg3{ background:linear-gradient(135deg, #2a4a3e, #1a2f26); }
-  .gg4{ background:linear-gradient(135deg, #4a2a3a, #2f1a24); }
-  @media (max-width:720px){ .gallery-grid{ grid-template-columns:1fr 1fr; grid-template-rows:140px 140px 140px; } .g1{ grid-row:auto; } }
-
-  .rank-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; }
-  .rank-card{ background:var(--card); border:1px solid var(--card-border); border-radius:var(--radius); padding:30px; position:relative; }
-  .rank-card.featured{ border-color:var(--accent); background:linear-gradient(180deg, rgba(109,141,255,0.06), var(--card)); }
-  .rank-card.featured::before{ content:'MOST POPULAR'; position:absolute; top:-11px; left:24px; background:var(--accent); color:#fff; font-size:10px; font-weight:700; letter-spacing:0.05em; padding:4px 10px; border-radius:100px; }
-  .rank-card h3{ font-size:19px; font-weight:600; margin-bottom:4px; }
-  .rank-price{ font-family:'Fraunces', serif; font-size:32px; font-weight:700; margin-bottom:18px; }
-  .rank-price span{ font-size:14px; color:var(--text-dim); font-family:'Manrope'; font-weight:500; }
-  .rank-card ul{ list-style:none; margin-bottom:24px; }
-  .rank-card ul li{ font-size:14px; color:var(--text-dim); padding:7px 0; border-bottom:1px solid var(--card-border); }
-  .rank-card ul li:last-child{ border-bottom:none; }
-  .rank-btn{ display:block; text-align:center; padding:12px; border-radius:9px; background:var(--card-border); font-size:14px; font-weight:700; transition:background 0.15s; cursor:pointer; border:none; width:100%; color:var(--text); font-family:'Manrope'; }
-  .rank-card.featured .rank-btn{ background:var(--accent); color:#fff; }
-  .rank-btn:hover{ opacity:0.9; }
-  @media (max-width:860px){ .rank-grid{ grid-template-columns:1fr; } }
-
-  .staff-grid{ display:grid; grid-template-columns:repeat(4, 1fr); gap:20px; }
-  .staff-card{ text-align:center; }
-  .staff-avatar{ width:100%; aspect-ratio:1; border-radius:var(--radius); margin-bottom:14px; background:linear-gradient(135deg, var(--accent), var(--accent-2)); display:flex; align-items:center; justify-content:center; font-family:'Fraunces', serif; font-size:28px; font-weight:700; color:#fff; }
-  .staff-card h3{ font-size:15px; font-weight:600; margin-bottom:2px; }
-  .staff-card span{ font-size:13px; color:var(--accent); }
-  @media (max-width:860px){ .staff-grid{ grid-template-columns:1fr 1fr; } }
-
-  .tier-list{ display:flex; flex-direction:column; border:1px solid var(--card-border); border-radius:var(--radius); overflow:hidden; }
-  .tier{ display:grid; grid-template-columns:150px 1fr; gap:24px; padding:22px 26px; border-bottom:1px solid var(--card-border); background:var(--bg-soft); }
-  .tier:last-child{ border-bottom:none; }
-  .tier:hover{ background:var(--card); }
-  .tier-tag{ display:flex; flex-direction:column; gap:6px; }
-  .tier-tag .n{ font-size:11px; font-weight:700; letter-spacing:0.05em; color:var(--text-dim); }
-  .tier-tag .label{ display:inline-block; width:fit-content; font-size:13px; font-weight:700; padding:5px 12px; border-radius:100px; }
-  .t1 .label{ background:rgba(74,222,128,0.12); color:var(--ok); }
-  .t2 .label{ background:rgba(109,141,255,0.12); color:var(--accent); }
-  .t3 .label{ background:rgba(251,191,36,0.12); color:#fbbf24; }
-  .t4 .label{ background:rgba(251,146,60,0.12); color:#fb923c; }
-  .t5 .label{ background:var(--danger-soft); color:var(--danger); }
-  .tier-body h3{ font-size:17px; font-weight:600; margin-bottom:4px; }
-  .tier-body p{ font-size:14px; color:var(--text-dim); }
-  @media (max-width:720px){ .tier{ grid-template-columns:1fr; } }
-
-  .rules-list{ display:flex; flex-direction:column; }
-  .rule{ display:grid; grid-template-columns:50px 1fr; gap:22px; padding:26px 0; border-bottom:1px solid var(--card-border); }
-  .rule:first-child{ padding-top:0; }
-  .rule:last-child{ border-bottom:none; }
-  .rule-num{ font-family:'Fraunces', serif; font-size:20px; font-weight:600; color:var(--text-dim); }
-  .rule-content h3{ font-size:17px; font-weight:600; margin-bottom:6px; }
-  .rule-content p{ font-size:14px; color:var(--text-dim); margin-bottom:10px; }
-  .punish-tag{ display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600; background:var(--danger-soft); color:var(--danger); padding:6px 12px; border-radius:8px; }
-  @media (max-width:600px){ .rule{ grid-template-columns:1fr; } }
-
-  .faq-item{ border-bottom:1px solid var(--card-border); padding:22px 0; }
-  .faq-item summary{ cursor:pointer; font-size:16px; font-weight:600; list-style:none; display:flex; justify-content:space-between; align-items:center; }
-  .faq-item summary::-webkit-details-marker{ display:none; }
-  .faq-item summary::after{ content:'+'; font-size:20px; color:var(--accent); font-weight:400; }
-  .faq-item[open] summary::after{ content:'−'; }
-  .faq-item p{ margin-top:12px; font-size:14.5px; color:var(--text-dim); max-width:640px; }
-
-  /* LINKS PANEL — for you to edit */
-  .links-panel{ display:grid; grid-template-columns:repeat(2, 1fr); gap:16px; }
-  .link-slot{ background:var(--card); border:1px solid var(--card-border); border-radius:var(--radius); padding:22px; display:flex; align-items:center; gap:16px; }
-  .link-slot .li-icon{ width:40px; height:40px; border-radius:10px; background:var(--accent-soft); color:var(--accent); display:flex; align-items:center; justify-content:center; font-size:17px; flex-shrink:0; }
-  .link-slot .li-body{ flex:1; min-width:0; }
-  .link-slot .li-body h4{ font-size:14px; font-weight:700; margin-bottom:3px; }
-  .link-slot .li-body code{ font-size:12.5px; color:var(--text-dim); word-break:break-all; }
-  @media (max-width:720px){ .links-panel{ grid-template-columns:1fr; } }
-
-  footer{ padding:50px 0; border-top:1px solid var(--card-border); }
-  .footer-top{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:30px; margin-bottom:34px; }
-  .footer-links{ display:flex; gap:40px; flex-wrap:wrap; }
-  .footer-col h4{ font-size:13px; font-weight:700; margin-bottom:14px; color:var(--text); }
-  .footer-col a{ display:block; font-size:14px; color:var(--text-dim); padding:5px 0; }
-  .footer-col a:hover{ color:var(--text); }
-  .footer-bottom{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; padding-top:24px; border-top:1px solid var(--card-border); font-size:13px; color:var(--text-dim); }
-  .socials{ display:flex; gap:14px; }
-  .socials a{ width:34px; height:34px; border-radius:8px; background:var(--card); border:1px solid var(--card-border); display:flex; align-items:center; justify-content:center; font-size:13px; }
+:root{--bg:#0e1116;--panel:#171c25;--line:#273042;--text:#e8edf5;--mute:#8d9ab0;--accent:#5eead4;--accent2:#a78bfa;--gold:#fbbf24;--btn-text:#06201c;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-theme="light"]{--bg:#f3f6fb;--panel:#fff;--line:#d8e0ee;--text:#14202f;--mute:#566478;--accent:#0f9d8a;--accent2:#6d4fd6;--gold:#b7791f;--btn-text:#fff}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f3f6fb;--panel:#fff;--line:#d8e0ee;--text:#14202f;--mute:#566478;--accent:#0f9d8a;--accent2:#6d4fd6;--gold:#b7791f;--btn-text:#fff}}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Nunito',system-ui,sans-serif;line-height:1.6}
+h1,h2,h3{font-family:'Bungee','Impact',sans-serif;font-weight:400;line-height:1.1;margin:0}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{font-family:Bungee,sans-serif;font-size:22px;letter-spacing:1px}.logo b{color:var(--accent);font-weight:400}
+nav ul{display:flex;gap:22px;list-style:none;margin:0;padding:0;font-weight:800;font-size:15px}
+nav ul a{color:var(--mute)}nav ul a:hover{color:var(--text)}
+.btn{display:inline-block;border:0;cursor:pointer;font:800 15px Nunito,sans-serif;padding:12px 22px;border-radius:8px;background:var(--accent);color:var(--btn-text)}
+.btn:hover{filter:brightness(1.1)}
+.btn.alt{background:#5865f2;color:#fff}.btn.ghost{background:transparent;border:2px solid var(--line);color:var(--text)}
+.hero{padding:90px 0 70px;text-align:center;background:radial-gradient(ellipse at 50% 0,color-mix(in srgb,var(--accent2) 28%,transparent),transparent 65%)}
+.hero h1{font-size:clamp(48px,11vw,104px);letter-spacing:2px;animation:float 5s ease-in-out infinite}
+.hero h1 span{color:var(--accent)}
+@keyframes float{50%{transform:translateY(-8px)}}
+@media(prefers-reduced-motion:reduce){.hero h1{animation:none}}
+.hero p{max-width:540px;margin:16px auto 28px;color:var(--mute);font-size:18px}
+.ip{display:inline-flex;align-items:center;gap:12px;background:var(--panel);border:2px solid var(--line);border-radius:10px;padding:8px 8px 8px 20px;font-weight:800}
+.ip code{font-size:20px;color:var(--accent)}
+.status{margin-top:18px;color:var(--mute);font-weight:700;font-size:14px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#22c55e;margin-right:6px}
+.cta{margin-top:22px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+section{padding:64px 0}
+section>.wrap>h2{font-size:34px;text-align:center}
+.sub{text-align:center;color:var(--mute);margin:8px auto 36px;max-width:520px}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:32px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px}
+.card h3{font-size:20px;margin-bottom:8px}.card p{margin:0;color:var(--mute)}
+.kits{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}
+.kit{display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:24px;border-top:4px solid var(--c)}
+.kit h3{font-size:22px;color:var(--c)}
+.price{font:400 30px Bungee,sans-serif;margin:8px 0}
+.kit ul{padding-left:18px;margin:0 0 20px;color:var(--mute);flex:1}
+.kit .btn{background:var(--c);color:#111;text-align:center}
+.people{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.person{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;text-align:center}
+.person img{width:72px;height:72px;image-rendering:pixelated;border-radius:8px;background:var(--line)}
+.person b{display:block;margin-top:10px;font-size:18px}
+.role{font-size:13px;font-weight:800;color:var(--accent2)}
+.role.gold{color:var(--gold)}
+h3.group{font-size:18px;color:var(--mute);margin:34px 0 14px;text-align:center}
+.discord{text-align:center;background:linear-gradient(135deg,#5865f2,#7c3aed);color:#fff;border-radius:16px;padding:44px 20px}
+.discord h2{font-size:30px}.discord p{margin:10px 0 22px;opacity:.9}
+.discord .btn{background:#fff;color:#4338ca}
+footer{border-top:1px solid var(--line);padding:26px 0;text-align:center;color:var(--mute);font-size:14px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;padding:20px;z-index:20}
+.modal.open{display:flex}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:26px;width:100%;max-width:400px}
+.box h3{font-size:22px;margin-bottom:6px}
+.box label{display:block;font-weight:800;font-size:14px;margin:16px 0 6px}
+.box input,.box select{width:100%;padding:11px 12px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--text);font:700 15px Nunito,sans-serif}
+.box .row{display:flex;gap:10px;margin-top:22px}.box .row .btn{flex:1}
+.msg{margin-top:14px;font-weight:700;font-size:14px;color:var(--accent)}
+@media(max-width:640px){nav ul{display:none}}
 </style>
 </head>
 <body>
+<nav><div class="wrap">
+  <a class="logo" href="#top">Ghost<b>MC</b></a>
+  <ul><li><a href="#modes">Gamemodes</a></li><li><a href="#store">Store</a></li><li><a href="#team">Team</a></li><li><a href="#discord">Discord</a></li></ul>
+  <a class="btn" href="#store">Buy kits</a>
+</div></nav>
 
-<nav>
-  <div class="wrap">
-    <div class="brand"><span class="dot"></span>Aetherum</div>
-    <ul>
-      <li><a href="#features">Features</a></li>
-      <li><a href="#gallery">Gallery</a></li>
-      <li><a href="#store">Store</a></li>
-      <li><a href="#team">Team</a></li>
-      <li><a href="#rules">Rules</a></li>
-      <li><a href="#links">Links</a></li>
-      <li><a href="#faq">FAQ</a></li>
-    </ul>
-    <a href="#" class="nav-cta edit-me" data-edit="discord-href">Join Discord</a>
+<header class="hero" id="top"><div class="wrap">
+  <h1>Ghost<span>MC</span></h1>
+  <p>Survival, PvP and kits on a lag-free server. Join the players already haunting the world.</p>
+  <div class="ip"><code id="ipText">play.ghostmc.net</code><button class="btn" id="copyBtn">Copy IP</button></div>
+  <div class="status"><span class="dot"></span><span id="statusTxt">Online · Java &amp; Bedrock · 1.21+</span></div>
+  <div class="cta"><a class="btn alt" href="https://discord.gg/YOUR-INVITE">Join Discord</a><a class="btn ghost" href="#store">Visit store</a></div>
+</div></header>
+
+<section id="modes"><div class="wrap">
+  <h2>What you can play</h2>
+  <div class="modes">
+    <div class="card"><h3>Survival</h3><p>Claim land, trade with players and build without grief.</p></div>
+    <div class="card"><h3>Kit PvP</h3><p>Fast fights with balanced kits and ranked leaderboards.</p></div>
+    <div class="card"><h3>Skyblock</h3><p>Start on one island, grow it and compete with other islands.</p></div>
+    <div class="card"><h3>Events</h3><p>Weekly tournaments with in-game and store prizes.</p></div>
   </div>
-</nav>
+</div></section>
 
-<div class="hero">
-  <div class="wrap">
-    <div class="eyebrow" id="status-badge"><span class="pulse"></span><span id="status-text">Checking server status…</span></div>
-    <h1 class="title">Welcome to <span>GrapesMC</span></h1>
-    <p class="lead">A survival server built for long-term worlds, real economies, and a community that actually knows each other. No pay-to-win, ever.</p>
+<section id="store" style="background:color-mix(in srgb,var(--panel) 40%,transparent)"><div class="wrap">
+  <h2>Kit store</h2>
+  <p class="sub">Kits are delivered to your account in-game within a few minutes of purchase.</p>
+  <div class="kits" id="kitGrid"></div>
+</div></section>
 
-    <div class="ip-box edit-me" data-edit="server-ip">
-      <div class="ip" id="server-ip-text">play.grapesmc.fun:19126</div>
-      <button onclick="copyIP()">Copy IP</button>
-    </div>
+<section id="team"><div class="wrap">
+  <h2>Owners and supporters</h2>
+  <p class="sub">The people who built GhostMC and keep it running.</p>
+  <h3 class="group">Owners</h3>
+  <div class="people" id="owners"></div>
+  <h3 class="group">Funders</h3>
+  <div class="people" id="funders"></div>
+</div></section>
 
-    <div class="cta-row">
-      <a href="#store" class="btn-secondary">💎 Visit Store</a>
-      <a href="#" class="btn-secondary edit-me" data-edit="discord-href">💬 Join Discord</a>
-      <a href="#rules" class="btn-secondary">📜 Read Rules</a>
-    </div>
-
-    <div class="hero-stats">
-      <div class="stat"><b id="stat-online">—</b><span>Players online</span></div>
-      <div class="stat"><b id="stat-max">—</b><span>Max slots</span></div>
-      <div class="stat"><b id="stat-version">—</b><span>Server version</span></div>
-      <div class="stat"><b>Since 2026</b><span>Running strong</span></div>
-    </div>
+<section id="discord"><div class="wrap">
+  <div class="discord">
+    <h2>Join our Discord</h2>
+    <p>Get support, find friends, see giveaways and server news.</p>
+    <a class="btn" href="https://discord.gg/YOUR-INVITE">Join Discord</a>
   </div>
-</div>
+</div></section>
 
-<section id="features">
-  <div class="wrap">
-    <div class="section-label">Why play here</div>
-    <h2 class="section-title">Built different from the average server</h2>
-    <p class="section-sub">Every system here was built to last — not bolted on for a launch weekend.</p>
-    <div class="feature-grid">
-      <div class="feature"><div class="icon">⛏</div><h3>Survival, done right</h3><p>Vanilla-plus survival with land claims, so your builds stay yours forever.</p></div>
-      <div class="feature"><div class="icon">💰</div><h3>Player-driven economy</h3><p>A real player market and shops — no pay-to-win items, ever.</p></div>
-      <div class="feature"><div class="icon">🛡</div><h3>Anti-grief protection</h3><p>Claim plugin, rollback tools, and active staff keep your builds safe.</p></div>
-      <div class="feature"><div class="icon">🎉</div><h3>Seasonal events</h3><p>Build contests, PvP tournaments, and holiday events year-round.</p></div>
-      <div class="feature"><div class="icon">🌐</div><h3>Cross-play ready</h3><p>Java and Bedrock players play together on the same world.</p></div>
-      <div class="feature"><div class="icon">🎧</div><h3>Active community</h3><p>A Discord that's actually alive — LFG channels, events, and real conversations.</p></div>
-    </div>
-  </div>
-</section>
+<footer>© 2026 GhostMC. Not affiliated with Mojang or Microsoft.</footer>
 
-<section id="gallery">
-  <div class="wrap">
-    <div class="section-label">Take a look</div>
-    <h2 class="section-title">Built by the community, for the community</h2>
-    <p class="section-sub edit-me" data-edit="gallery-images">Replace these blocks with real screenshots — swap the background CSS or add &lt;img&gt; tags.</p>
-    <div class="gallery-grid">
-      <div class="gg1 g1"><span>SOON</span></div>
-      <div class="gg2"><span>SOON</span></div>
-      <div class="gg3"><span>SOON</span></div>
-      <div class="gg4"><span>SOON</span></div>
-    </div>
-  </div>
-</section>
-
-<section id="store">
-  <div class="wrap">
-    <div class="section-label">Support the server</div>
-    <h2 class="section-title">Ranks & perks</h2>
-    <p class="section-sub edit-me" data-edit="store-note">Wire these buttons to your real Tebex/store checkout links, and edit prices + perks below.</p>
-    <div class="rank-grid">
-      <div class="rank-card">
-        <h3>ELITE</h3>
-        <div class="rank-price">100INR<span>/one-time</span></div>
-        <ul><li>Custom chat tag</li><li>3 extra homes</li><li>Access to /hat, /nick</li></ul>
-        <button class="rank-btn edit-me" data-edit="store-link-1" onclick="alert('Add your store checkout link here')">Get Elite</button>
-      </div>
-      <div class="rank-card featured">
-        <h3>WARRIOR</h3>
-        <div class="rank-price">50INR<span>/one-time</span></div>
-        <ul><li>Everything in WARRIORr</li><li>Colored name + custom prefix</li><li>10 extra homes, /fly in own claim</li><li>Priority queue access</li></ul>
-        <button class="rank-btn edit-me" data-edit="store-link-2" onclick="alert('Add your store checkout link here')">Get Warrior</button>
-      </div>
-      <div class="rank-card">
-        <h3>Legend</h3>
-        <div class="rank-price">140INR<span>/one-time</span></div>
-        <ul><li>Everything in LEGEND/li><li>Unlimited homes</li><li>Exclusive particle effects</li><li>Early access to new features</li></ul>
-        <button class="rank-btn edit-me" data-edit="store-link-3" onclick="alert('Add your store checkout link here')">Get Legend</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="team">
-  <div class="wrap">
-    <div class="section-label">Meet the team</div>
-    <h2 class="section-title">The people running things</h2>
-    <p class="section-sub edit-me" data-edit="staff-names">Swap in your real staff names and roles below.</p>
-    <div class="staff-grid">
-      <div class="staff-card"><div class="staff-avatar">O</div><h3>DEVESH</h3><span>Founder</span></div>
-      <div class="staff-card"><div class="staff-avatar">A</div><h3>TOT4L_OG</h3><span>JR FOUNDER & OWNER</span></div>
-      <div class="staff-card"><div class="staff-avatar">M</div><h3>GhostzYT</h3><span>OWNER</span></div>
-    </div>
-  </div>
-</section>
-
-<section id="punishments">
-  <div class="wrap">
-    <div class="section-label">Enforcement</div>
-    <h2 class="section-title">How punishments escalate</h2>
-    <p class="section-sub">Consequences scale with severity and repetition.</p>
-    <div class="tier-list">
-      <div class="tier t1"><div class="tier-tag"><span class="n">TIER 1</span><span class="label">Warning</span></div><div class="tier-body"><h3>Verbal warning</h3><p>First minor offense. No ban attached.</p></div></div>
-      <div class="tier t2"><div class="tier-tag"><span class="n">TIER 2</span><span class="label">Mute</span></div><div class="tier-body"><h3>1–3 day mute</h3><p>Repeated minor offenses or spam. Appeal after 24 hours.</p></div></div>
-      <div class="tier t3"><div class="tier-tag"><span class="n">TIER 3</span><span class="label">Short ban</span></div><div class="tier-body"><h3>24 hours – 7 days</h3><p>Serious first offense or repeat violations.</p></div></div>
-      <div class="tier t4"><div class="tier-tag"><span class="n">TIER 4</span><span class="label">Long ban</span></div><div class="tier-body"><h3>7–30 days</h3><p>Serious repeated violations or ban evasion.</p></div></div>
-      <div class="tier t5"><div class="tier-tag"><span class="n">TIER 5</span><span class="label">Permanent</span></div><div class="tier-body"><h3>Removed for good</h3><p>Hacking, severe harassment, or repeated bans.</p></div></div>
-    </div>
-  </div>
-</section>
-
-<section id="rules">
-  <div class="wrap">
-    <div class="section-label">The rules</div>
-    <h2 class="section-title">10 things every player agrees to</h2>
-    <p class="section-sub">These apply to everyone, staff included.</p>
-    <div class="rules-list">
-      <div class="rule"><div class="rule-num">01</div><div class="rule-content"><h3>No hacking or cheating</h3><p>No unauthorized mods, X-ray, speed/flight hacks, or duplication exploits.</p><span class="punish-tag">Immediate ban</span></div></div>
-      <div class="rule"><div class="rule-num">02</div><div class="rule-content"><h3>No false reports</h3><p>Only report genuine violations — don't waste staff time.</p><span class="punish-tag">Warning → permanent</span></div></div>
-      <div class="rule"><div class="rule-num">03</div><div class="rule-content"><h3>No spawn killing</h3><p>Let new and respawning players get their bearings first.</p><span class="punish-tag">Warning → permanent</span></div></div>
-      <div class="rule"><div class="rule-num">04</div><div class="rule-content"><h3>No griefing</h3><p>Other players' builds and terrain are off-limits without consent.</p><span class="punish-tag">Ban until repaired</span></div></div>
-      <div class="rule"><div class="rule-num">05</div><div class="rule-content"><h3>No stealing</h3><p>Chests and unclaimed builds belong to whoever placed them.</p><span class="punish-tag">3–7 day ban</span></div></div>
-      <div class="rule"><div class="rule-num">06</div><div class="rule-content"><h3>No harassment</h3><p>No hate speech, bullying, threats, or discrimination.</p><span class="punish-tag">Mute → ban</span></div></div>
-      <div class="rule"><div class="rule-num">07</div><div class="rule-content"><h3>No excessive AFK farming</h3><p>Automated farms are fine, just don't strain server performance.</p><span class="punish-tag">Farm removed</span></div></div>
-      <div class="rule"><div class="rule-num">08</div><div class="rule-content"><h3>Keep chat clean</h3><p>No spam, flooding, or advertising other servers.</p><span class="punish-tag">Mute</span></div></div>
-      <div class="rule"><div class="rule-num">09</div><div class="rule-content"><h3>Respect staff decisions</h3><p>Disagreements go through appeals, not arguments in the moment.</p><span class="punish-tag">Temp ban</span></div></div>
-      <div class="rule"><div class="rule-num">10</div><div class="rule-content"><h3>Claim your builds</h3><p>Unclaimed land isn't protected — mark what's yours.</p><span class="punish-tag">Structures removed</span></div></div>
-    </div>
-  </div>
-</section>
-
-<section id="links">
-  <div class="wrap">
-    <div class="section-label">Quick links</div>
-    <h2 class="section-title">All your links in one place</h2>
-    <p class="section-sub">Placeholder area — replace the href="#" and code text in each slot below with your real links.</p>
-    <div class="links-panel">
-      <a href="#" class="link-slot edit-me" data-edit="link-discord"><div class="li-icon">💬</div><div class="li-body"><h4>Discord Server</h4><code>https://discord.gg/srsN3KBZK</code></div></a>
-      <a href="#" class="link-slot edit-me" data-edit="link-store"><div class="li-icon">💎</div><div class="li-body"><h4>Store / Tebex</h4><code>https://your-store.tebex.io</code></div></a>
-      <a href="#" class="link-slot edit-me" data-edit="link-vote"><div class="li-icon">🗳</div><div class="li-body"><h4>Vote Links</h4><code>https://minecraft-server-list.com/vote</code></div></a>
-      <a href="#" class="link-slot edit-me" data-edit="link-map"><div class="li-icon">🗺</div><div class="li-body"><h4>Live Map (Dynmap/BlueMap)</h4><code>https://map.aetherum.net</code></div></a>
-      <a href="#" class="link-slot edit-me" data-edit="link-forums"><div class="li-icon">📋</div><div class="li-body"><h4>Forums / Ticket System</h4><code>https://forums.aetherum.net</code></div></a>
-      <a href="#" class="link-slot edit-me" data-edit="link-wiki"><div class="li-icon">📖</div><div class="li-body"><h4>Wiki / Guides</h4><code>https://wiki.aetherum.net</code></div></a>
-      <a href="#" class="link-slot edit-me" data-edit="link-twitter"><div class="li-icon">🐦</div><div class="li-body"><h4>Twitter / X</h4><code>https://x.com/your-server</code></div></a>
-      <a href="#" class="link-slot edit-me" data-edit="link-youtube"><div class="li-icon">▶</div><div class="li-body"><h4>YouTube</h4><code>https://youtube.com/@your-server</code></div></a>
-    </div>
-  </div>
-</section>
-
-<section id="faq">
-  <div class="wrap">
-    <div class="section-label">Questions</div>
-    <h2 class="section-title">Frequently asked</h2>
-    <p class="section-sub">Still unsure about something? Ask in Discord and staff will help directly.</p>
-    <details class="faq-item" open><summary>Is the server pay-to-win?</summary><p>No. Every rank sold in the store is cosmetic or quality-of-life only — no gear, no currency, no gameplay advantage.</p></details>
-    <details class="faq-item"><summary>Does it support Bedrock (mobile/console)?</summary><p>Yes, both Java and Bedrock players connect to the same world through cross-play support.</p></details>
-    <details class="faq-item"><summary>How do I report a player?</summary><p>Open a ticket in Discord with their username, what happened, and any evidence like screenshots or clips.</p></details>
-    <details class="faq-item"><summary>Can I get my ban reviewed?</summary><p>Yes — every punishment can be appealed. See the appeal steps in the rules section above.</p></details>
-  </div>
-</section>
-
-<footer>
-  <div class="wrap">
-    <div class="footer-top">
-      <div class="brand"><span class="dot"></span>GrapesMC</div>
-      <div class="footer-links">
-        <div class="footer-col"><h4>Server</h4><a href="#features">Features</a><a href="#gallery">Gallery</a><a href="#store">Store</a></div>
-        <div class="footer-col"><h4>Community</h4><a href="#team">Team</a><a href="#rules">Rules</a><a href="#faq">FAQ</a></div>
-        <div class="footer-col"><h4>Connect</h4><a href="#" class="edit-me" data-edit="link-discord">Discord</a><a href="#" class="edit-me" data-edit="link-twitter">Twitter / X</a><a href="#" class="edit-me" data-edit="link-youtube">YouTube</a></div>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© 2026 GrapesMC. Not affiliated with Mojang or Microsoft.</span>
-      <div class="socials"><a href="#" class="edit-me" data-edit="link-discord">D</a><a href="#" class="edit-me" data-edit="link-twitter">X</a><a href="#" class="edit-me" data-edit="link-youtube">Y</a></div>
-    </div>
-  </div>
-</footer>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle"><div class="box">
+  <h3 id="mTitle">Buy kit</h3>
+  <div id="mPrice" style="color:var(--mute);font-weight:700"></div>
+  <label for="user">Minecraft username</label>
+  <input id="user" placeholder="Steve" autocomplete="off" maxlength="16">
+  <label for="pay">Payment method</label>
+  <select id="pay"><option>UPI</option><option>PayPal</option><option>Card</option></select>
+  <div class="msg" id="msg" role="status"></div>
+  <div class="row"><button class="btn ghost" id="cancel">Cancel</button><button class="btn" id="confirm">Checkout</button></div>
+</div></div>
 
 <script>
-  function copyIP(){
-    const ip = document.getElementById('server-ip-text').textContent.trim();
-    navigator.clipboard.writeText(ip);
-    const btn = event.target;
-    const old = btn.textContent;
-    btn.textContent = 'Copied!';
-    setTimeout(()=> btn.textContent = old, 1500);
-  }
+/* ===== EDIT THESE ===== */
+const CONFIG={
+  ip:"play.ghostmc.net",
+  discord:"https://discord.gg/YOUR-INVITE",
+  // Replace with your payment link (Tebex, Razorpay, PayPal...). {kit} and {user} are filled in automatically.
+  checkoutUrl:"",
+  owners:[{name:"GhostOwner",role:"Founder"},{name:"GhostAdmin",role:"Co-owner"}],
+  funders:[{name:"Funder_One",role:"Top funder"},{name:"Funder_Two",role:"Funder"},{name:"Funder_Three",role:"Funder"}],
+  kits:[
+    {name:"Starter",price:199,color:"#5eead4",items:["Iron armor set","Stone tools","32 steak","Starter /kit cooldown 24h"]},
+    {name:"Warrior",price:499,color:"#a78bfa",items:["Diamond armor, Protection II","Sharpness II sword","16 golden apples","Cooldown 12h"]},
+    {name:"Ghost",price:999,color:"#fbbf24",items:["Netherite armor, Prot IV","Sharpness V sword","Elytra and fireworks","Exclusive ghost tag"]}
+  ]
+};
+/* ====================== */
+const $=s=>document.querySelector(s);
+const head=n=>`https://mc-heads.net/avatar/${encodeURIComponent(n)}/72`;
+document.getElementById("ipText").textContent=CONFIG.ip;
+document.querySelectorAll('a[href^="https://discord.gg"]').forEach(a=>a.href=CONFIG.discord);
 
-  // LIVE server status + player count (real, working — uses public mcsrvstat.us API)
-  async function loadServerStatus(){
-    const ip = document.getElementById('server-ip-text').textContent.trim();
-    const badge = document.getElementById('status-badge');
-    const statusText = document.getElementById('status-text');
-    try{
-      const res = await fetch(`https://api.mcsrvstat.us/3/${ip}`);
-      const data = await res.json();
-      if(data.online){
-        statusText.textContent = `${data.players?.online ?? 0} players online now`;
-        document.getElementById('stat-online').textContent = data.players?.online ?? '—';
-        document.getElementById('stat-max').textContent = data.players?.max ?? '—';
-        document.getElementById('stat-version').textContent = data.version ?? '—';
-      } else {
-        badge.classList.add('offline');
-        statusText.textContent = 'Server currently offline';
-        document.getElementById('stat-online').textContent = '0';
-      }
-    } catch(err){
-      badge.classList.add('offline');
-      statusText.textContent = 'Status unavailable — check IP is correct';
-    }
+function people(el,list,gold){
+  el.innerHTML=list.map(p=>`<div class="person"><img src="${head(p.name)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><b>${p.name}</b><span class="role ${gold?'gold':''}">${p.role}</span></div>`).join("");
+}
+people($("#owners"),CONFIG.owners,false);
+people($("#funders"),CONFIG.funders,true);
+
+$("#kitGrid").innerHTML=CONFIG.kits.map((k,i)=>`<div class="kit" style="--c:${k.color}"><h3>${k.name} kit</h3><div class="price">₹${k.price}</div><ul>${k.items.map(x=>`<li>${x}</li>`).join("")}</ul><button class="btn" data-i="${i}">Buy ${k.name}</button></div>`).join("");
+
+$("#copyBtn").onclick=async()=>{
+  try{await navigator.clipboard.writeText(CONFIG.ip);$("#copyBtn").textContent="Copied";}
+  catch(e){$("#copyBtn").textContent=CONFIG.ip;}
+  setTimeout(()=>$("#copyBtn").textContent="Copy IP",1800);
+};
+
+let kit=null;
+const modal=$("#modal");
+document.querySelectorAll("[data-i]").forEach(b=>b.onclick=()=>{
+  kit=CONFIG.kits[b.dataset.i];
+  $("#mTitle").textContent=kit.name+" kit";
+  $("#mPrice").textContent="Price: ₹"+kit.price;
+  $("#msg").textContent="";modal.classList.add("open");$("#user").focus();
+});
+$("#cancel").onclick=()=>modal.classList.remove("open");
+modal.onclick=e=>{if(e.target===modal)modal.classList.remove("open")};
+document.addEventListener("keydown",e=>{if(e.key==="Escape")modal.classList.remove("open")});
+$("#confirm").onclick=()=>{
+  const u=$("#user").value.trim();
+  if(!/^[A-Za-z0-9_.]{3,16}$/.test(u)){$("#msg").style.color="#f87171";$("#msg").textContent="Enter a valid Minecraft username (3–16 characters).";return;}
+  $("#msg").style.color="";
+  if(CONFIG.checkoutUrl){
+    location.href=CONFIG.checkoutUrl.replace("{kit}",encodeURIComponent(kit.name)).replace("{user}",encodeURIComponent(u));
+  }else{
+    $("#msg").textContent="Order noted for "+u+". Set a checkoutUrl in CONFIG to take real payments.";
   }
-  loadServerStatus();
-  setInterval(loadServerStatus, 60000); // refresh every 60s
+};
 </script>
-
 </body>
 </html>
